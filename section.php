@@ -103,8 +103,19 @@ class PageLinesFlipper extends PageLinesSection {
 			'count_number'	=> 20,
 			'default'		=> 10,
 			'label' 		=> __( 'Total Posts Loaded', 'pagelines' ),
-
 		);
+		
+		$options[] = array(
+			'key'		=> 'flipper_post_sort',
+			'type'		=> 'select',
+			'label'		=> __( 'Sort elements by postdate', 'pagelines' ),
+			'default'	=> 'DESC',
+			'opts'			=> array(
+				'DESC'		=> array('name' => __( 'Date Descending (default)', 'pagelines' ) ),
+				'ASC'		=> array('name' => __( 'Date Ascending', 'pagelines' ) ),
+				'rand'		=> array('name'	=> __( 'Random', 'pagelines' ) )
+			)
+		);	
 		
 		$selection_opts = array(
 			array(
@@ -119,12 +130,7 @@ class PageLinesFlipper extends PageLinesSection {
 				'type' 			=> 'text',
 
 				'label' 	=> __( 'Meta Key Value', 'pagelines' ),
-
 			),
-			
-			
-
-
 		);
 		
 		if($this->opt('flipper_post_type') == 'post'){
@@ -172,9 +178,15 @@ class PageLinesFlipper extends PageLinesSection {
 
 		$sizes = ($this->opt('flipper_sizes')) ? $this->opt('flipper_sizes') : 'full';
 
+		$sorting = ($this->opt('flipper_post_sort')) ? $this->opt('flipper_post_sort') : 'DESC';
+
+		$orderby = ( 'rand' == $this->opt('flipper_post_sort') ) ? 'rand' : 'date'; 
+
 		$the_query = array(
 			'posts_per_page' 	=> $total,
-			'post_type' 		=> $post_type
+			'post_type' 		=> $post_type,
+			'orderby'          => $orderby,
+			'order'            => $sorting,
 		);
 
 		if( $this->opt('flipper_meta_key') && $this->opt('flipper_meta_key') != '' && $this->opt('flipper_meta_value') ){
