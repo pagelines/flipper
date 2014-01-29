@@ -43,33 +43,38 @@ class PageLinesFlipper extends PageLinesSection {
 					'label' 	=> __( 'Which post type should Flipper use?', 'pagelines' ),
 					'help'		=> __( '<strong>Note</strong><br/> Post types for this section must have "featured images" enabled and be public.<br/><strong>Tip</strong><br/> Use a plugin to create custom post types for use with Flipper.', 'pagelines' ),
 				),
-
+				array(
+					'key'			=> 'flipper_shown',
+					'type' 			=> 'count_select',
+					'count_start'	=> 1,
+					'count_number'	=> 6,
+					'default'		=> 3,
+					'label' 		=> __( 'Max Number of Posts Shown', 'pagelines' ),
+					'help'		=> __( 'This controls the maximum number of posts shown. A smaller amount may be shown based on layout width.', 'pagelines' ),
+				),
+				array(
+					'key'			=> 'flipper_sizes',
+					'type' 			=> 'select_imagesizes',
+					'default'		=> 'large',
+					'label' 		=> __( 'Select Thumb Size', 'pagelines' )
+				),
+				array(
+					'key'			=> 'flipper_total',
+					'type' 			=> 'count_select',
+					'count_start'	=> 5,
+					'count_number'	=> 20,
+					'default'		=> 10,
+					'label' 		=> __( 'Total Posts Loaded', 'pagelines' ),
+				)
+				
 
 			)
 
 		);
-		$options[] = array(
-			'key'			=> 'flipper_shown',
-			'type' 			=> 'count_select',
-			'count_start'	=> 1,
-			'count_number'	=> 6,
-			'default'		=> 3,
-			'label' 		=> __( 'Max Number of Posts Shown', 'pagelines' ),
-			'help'		=> __( 'This controls the maximum number of posts shown. A smaller amount may be shown based on layout width.', 'pagelines' ),
-		);
-
-		$options[] = array(
-			'key'			=> 'flipper_sizes',
-			'type' 			=> 'select_imagesizes',
-			'default'		=> 'large',
-			'label' 		=> __( 'Select Image Size', 'pagelines' )
-		);
-
-
 
 		$options[] = array(
 
-			'title' => __( 'Flipper Title', 'pagelines' ),
+			'title' => __( 'Flipper Content', 'pagelines' ),
 			'type'	=> 'multi',
 			'help'		=> __( 'Options to control the text and link in the Flipper title.', 'pagelines' ),
 			'opts'	=> array(
@@ -84,27 +89,32 @@ class PageLinesFlipper extends PageLinesSection {
 					'label' 	=> __( 'Hide Title Link?', 'pagelines' ),
 
 				),
+				array(
+					'key'			=> 'flipper_meta',
+					'type' 			=> 'text',
+					'label' 		=> __( 'Flipper Meta', 'pagelines' ),
+					'ref'			=> __( 'Use shortcodes to control the dynamic meta info. Example shortcodes you can use are: <ul><li><strong>[post_categories]</strong> - List of categories</li><li><strong>[post_edit]</strong> - Link for admins to edit the post</li><li><strong>[post_tags]</strong> - List of post tags</li><li><strong>[post_comments]</strong> - Link to post comments</li><li><strong>[post_author_posts_link]</strong> - Author and link to archive</li><li><strong>[post_author_link]</strong> - Link to author URL</li><li><strong>[post_author]</strong> - Post author with no link</li><li><strong>[post_time]</strong> - Time of post</li><li><strong>[post_date]</strong> - Date of post</li><li><strong>[post_type]</strong> - Type of post</li></ul>', 'pagelines' ),
+				),
+				array(
+					'key'			=> 'flipper_show_excerpt',
+					'type' 			=> 'check',
+					'label' 	=> __( 'Show excerpt?', 'pagelines' ),
+
+				),
+				array(
+					'key'			=> 'flipper_show_love',
+					'type' 			=> 'check',
+					'label' 	=> __( 'Show love button/count?', 'pagelines' ),
+
+				),
+				
 
 
 			)
 
 		);
 
-		$options[] = array(
-			'key'			=> 'flipper_meta',
-			'type' 			=> 'text',
-			'label' 		=> __( 'Flipper Meta', 'pagelines' ),
-			'ref'			=> __( 'Use shortcodes to control the dynamic meta info. Example shortcodes you can use are: <ul><li><strong>[post_categories]</strong> - List of categories</li><li><strong>[post_edit]</strong> - Link for admins to edit the post</li><li><strong>[post_tags]</strong> - List of post tags</li><li><strong>[post_comments]</strong> - Link to post comments</li><li><strong>[post_author_posts_link]</strong> - Author and link to archive</li><li><strong>[post_author_link]</strong> - Link to author URL</li><li><strong>[post_author]</strong> - Post author with no link</li><li><strong>[post_time]</strong> - Time of post</li><li><strong>[post_date]</strong> - Date of post</li><li><strong>[post_type]</strong> - Type of post</li></ul>', 'pagelines' ),
-		);
-		$options[] = array(
-			'key'			=> 'flipper_total',
-			'type' 			=> 'count_select',
-			'count_start'	=> 5,
-			'count_number'	=> 20,
-			'default'		=> 10,
-			'label' 		=> __( 'Total Posts Loaded', 'pagelines' ),
-		);
-		
+	
 		$options[] = array(
 			'key'		=> 'flipper_post_sort',
 			'type'		=> 'select',
@@ -174,9 +184,14 @@ class PageLinesFlipper extends PageLinesSection {
 
 		$hide_link = ($this->opt('flipper_hide_title_link')) ? $this->opt('flipper_hide_title_link') : false;
 
+		$show_excerpt = ($this->opt('flipper_show_excerpt')) ? $this->opt('flipper_show_excerpt') : false;
+		$show_love = ($this->opt('flipper_show_love')) ? $this->opt('flipper_show_love') : true;
+		
+
 		$meta = ($this->opt('flipper_meta')) ? $this->opt('flipper_meta') : '[post_date] [post_edit]';
 
-		$sizes = ($this->opt('flipper_sizes')) ? $this->opt('flipper_sizes') : 'full';
+		$sizes = ($this->opt('flipper_sizes')) ? $this->opt('flipper_sizes') : 'aspect-thumb';
+	
 
 		$sorting = ($this->opt('flipper_post_sort')) ? $this->opt('flipper_post_sort') : 'DESC';
 
@@ -205,7 +220,8 @@ class PageLinesFlipper extends PageLinesSection {
 		if(!empty($posts)) { setup_postdata( $post ); ?>
 
 				<div class="flipper-heading">
-					<div class="flipper-title">
+					<div class="flipper-title pl-title">
+					
 
 						<?php
 							echo $title;
@@ -228,8 +244,9 @@ class PageLinesFlipper extends PageLinesSection {
 							?>
 
 					</div>
-					<a class="flipper-prev pl-contrast" href="#"><i class="icon-arrow-left"></i></a>
-			    	<a class="flipper-next pl-contrast" href="#"><i class="icon-arrow-right"></i></a>
+					<a class="flipper-prev pl-contrast" href="#"><i class="icon-angle-left"></i></a>
+			    	<a class="flipper-next pl-contrast" href="#"><i class="icon-angle-right"></i></a>
+				
 				</div>
 
 				<div class="flipper-wrap">
@@ -250,7 +267,8 @@ class PageLinesFlipper extends PageLinesSection {
 					if ( has_post_thumbnail() ) {
 						echo get_the_post_thumbnail( $post->ID, $sizes, array('title' => ''));
 					} else {
-						echo '<img height="400" width="600" src="'.$this->base_url.'/missing-thumb.jpg" alt="no image added yet." />';
+						printf('<img height="400" width="600" src="%s" alt="no image added yet." />', pl_default_image());
+					
 						}
 						 ?>
 
@@ -258,15 +276,8 @@ class PageLinesFlipper extends PageLinesSection {
 					<a class="flipper-info pl-center-inside" href="<?php echo get_permalink();?>">
 
 						<div class="pl-center">
+							<div class="info-text"><i class="icon-link"></i></div>
 
-						<?php
-
-							$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );
-
-							printf('<div class="info-text">%s</div>', __("View", 'pagelines'));
-
-
-						?>
 
 
 						</div>
@@ -275,8 +286,15 @@ class PageLinesFlipper extends PageLinesSection {
 				</div><!--work-item-->
 
 				<div class="flipper-meta">
-					<a href="<?php echo get_permalink();?>"><h4 class="flipper-post-title"><?php the_title(); ?></h4></a>
+					<?php if( $show_love ) echo pl_love( $post->ID );?>
+					<h4 class="flipper-post-title"><a href="<?php echo get_permalink();?>"><?php the_title(); ?></a></h4>
 					<div class="flipper-metabar"><?php echo do_shortcode( apply_filters('pl_flipper_meta', $meta, $post->ID, pl_type_slug() )); ?></div>
+					<?php if( $show_excerpt ): ?>
+					<div class="flipper-excerpt pl-border">
+						<?php the_excerpt();?>
+					</div>
+					<?php endif;?>
+					
 				</div>
 
 
@@ -294,26 +312,7 @@ class PageLinesFlipper extends PageLinesSection {
 
 	}
 
-	function do_defaults(){
 
-		?>
-		<h2>StarBar</h2>
-		<ul class="starbars">
-			<li>
-				<p>Jack</p>
-				<div class="bar-wrap">
-					<span data-width="30%"><strong>30<i class="icon-star"></i></strong></span><strong>100<i class="icon-star"></i></strong>
-				</div>
-			</li>
-			<li>
-				<p>Jill</p>
-				<div class="bar-wrap">
-					<span data-width="60%"><strong>60<i class="icon-star"></i></strong></span>
-				</div>
-			</li>
-		</ul>
-		<?php
-	}
 
 
 }
