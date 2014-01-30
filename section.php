@@ -220,7 +220,7 @@ class PageLinesFlipper extends PageLinesSection {
 		if(!empty($posts)) { setup_postdata( $post ); ?>
 
 				<div class="flipper-heading">
-					<div class="flipper-title pl-title">
+					<div class="flipper-title pl-standard-title">
 					
 
 						<?php
