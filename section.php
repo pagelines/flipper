@@ -102,9 +102,9 @@ class PageLinesFlipper extends PageLinesSection {
 
 				),
 				array(
-					'key'			=> 'flipper_show_love',
+					'key'			=> 'disable_flipper_show_love',
 					'type' 			=> 'check',
-					'label' 	=> __( 'Show love button/count?', 'pagelines' ),
+					'label' 	=> __( 'Disable love button/count?', 'pagelines' ),
 
 				),
 				
@@ -185,7 +185,7 @@ class PageLinesFlipper extends PageLinesSection {
 		$hide_link = ($this->opt('flipper_hide_title_link')) ? $this->opt('flipper_hide_title_link') : false;
 
 		$show_excerpt = ($this->opt('flipper_show_excerpt')) ? $this->opt('flipper_show_excerpt') : false;
-		$show_love = ($this->opt('flipper_show_love')) ? $this->opt('flipper_show_love') : true;
+		$disable_show_love = ($this->opt('disable_flipper_show_love')) ? true : false;
 		
 
 		$meta = ($this->opt('flipper_meta')) ? $this->opt('flipper_meta') : '[post_date] [post_edit]';
@@ -286,7 +286,7 @@ class PageLinesFlipper extends PageLinesSection {
 				</div><!--work-item-->
 
 				<div class="flipper-meta">
-					<?php if( $show_love ) echo pl_love( $post->ID );?>
+					<?php if( ! $disable_show_love ) echo pl_love( $post->ID );?>
 					<h4 class="flipper-post-title"><a href="<?php echo get_permalink();?>"><?php the_title(); ?></a></h4>
 					<div class="flipper-metabar"><?php echo do_shortcode( apply_filters('pl_flipper_meta', $meta, $post->ID, pl_type_slug() )); ?></div>
 					<?php if( $show_excerpt ): ?>
