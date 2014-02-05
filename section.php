@@ -5,10 +5,7 @@
 	Author URI: http://www.pagelines.com
 	Description: A great way to flip through posts. Simply select a post type and done.
 	Class Name: PageLinesFlipper
-	Cloning: true
-	Edition: pro
-	Workswith: main, templates, sidebar_wrap
-	Filter: format
+	Filter: dual-width, format
 */
 
 class PageLinesFlipper extends PageLinesSection {
@@ -32,8 +29,9 @@ class PageLinesFlipper extends PageLinesSection {
 
 		$options[] = array(
 
-			'title' => __( 'Flipper Setup', 'pagelines' ),
+			'title' => __( 'Config', 'pagelines' ),
 			'type'	=> 'multi',
+			'col'	=> 1,
 			'opts'	=> array(
 				array(
 					'key'			=> 'flipper_post_type',
@@ -42,6 +40,15 @@ class PageLinesFlipper extends PageLinesSection {
 					'default'		=> 4,
 					'label' 	=> __( 'Which post type should Flipper use?', 'pagelines' ),
 					'help'		=> __( '<strong>Note</strong><br/> Post types for this section must have "featured images" enabled and be public.<br/><strong>Tip</strong><br/> Use a plugin to create custom post types for use with Flipper.', 'pagelines' ),
+				),
+				array(
+					'key'		=> $this->id.'_format',
+					'type'		=> 'select',
+					'label'		=> __( 'Layout Format', 'pagelines' ),
+					'opts'			=> array(
+						'grid'		=> array('name' => __( 'Grid', 'pagelines' ) ),
+						'masonry'	=> array('name' => __( 'Image Only', 'pagelines' ) )
+					)	
 				),
 				array(
 					'key'			=> 'flipper_shown',
@@ -55,7 +62,6 @@ class PageLinesFlipper extends PageLinesSection {
 				array(
 					'key'			=> 'flipper_sizes',
 					'type' 			=> 'select_imagesizes',
-					'default'		=> 'large',
 					'label' 		=> __( 'Select Thumb Size', 'pagelines' )
 				),
 				array(
@@ -65,7 +71,12 @@ class PageLinesFlipper extends PageLinesSection {
 					'count_number'	=> 20,
 					'default'		=> 10,
 					'label' 		=> __( 'Total Posts Loaded', 'pagelines' ),
-				)
+				),
+				array(
+					'key'		=> $this->id.'_hide_nav',
+					'type'		=> 'check',
+					'label'		=> __( 'Hide Nav?', 'pagelines' )
+				),
 				
 
 			)
@@ -75,6 +86,7 @@ class PageLinesFlipper extends PageLinesSection {
 		$options[] = array(
 
 			'title' => __( 'Flipper Content', 'pagelines' ),
+			'col'	=> 2,
 			'type'	=> 'multi',
 			'help'		=> __( 'Options to control the text and link in the Flipper title.', 'pagelines' ),
 			'opts'	=> array(
@@ -157,8 +169,8 @@ class PageLinesFlipper extends PageLinesSection {
 		
 
 		$options[] = array(
-
-			'title' => __( 'Additional Post Selection', 'pagelines' ),
+			'col'	=> 1,
+			'title' => __( 'Advanced Post Selection', 'pagelines' ),
 			'type'	=> 'multi',
 			
 			'opts'	=> $selection_opts
@@ -187,6 +199,8 @@ class PageLinesFlipper extends PageLinesSection {
 		$show_excerpt = ($this->opt('flipper_show_excerpt')) ? $this->opt('flipper_show_excerpt') : false;
 		$disable_show_love = ($this->opt('disable_flipper_show_love')) ? true : false;
 		
+
+		$format = ( $this->opt($this->id.'_format') ) ? $this->opt($this->id.'_format') : 'grid';
 
 		$meta = ($this->opt('flipper_meta')) ? $this->opt('flipper_meta') : '[post_date] [post_edit]';
 
@@ -218,40 +232,41 @@ class PageLinesFlipper extends PageLinesSection {
 		
 
 		if(!empty($posts)) { setup_postdata( $post ); ?>
-
-				<div class="flipper-heading">
-					<div class="flipper-title pl-standard-title">
-					
-
-						<?php
-							echo $title;
-
-
-							$archive_link = get_post_type_archive_link( $post_type );
-
-							if( $archive_link && !$hide_link ){
-								printf( '<a href="%s" > %s</a>',
-									$archive_link,
-									__(' / View All', 'pagelines')
-								);
-							} else if ($post_type == 'post' && get_option( 'page_for_posts') && !is_home()){
-								printf( '<a href="%s" > %s</a>',
-									get_page_uri( get_option( 'page_for_posts') ),
-									__(' / View Blog', 'pagelines')
-								);
-							}
-
-							?>
-
-					</div>
-					<a class="flipper-prev pl-contrast" href="#"><i class="icon-angle-left"></i></a>
-			    	<a class="flipper-next pl-contrast" href="#"><i class="icon-angle-right"></i></a>
 				
-				</div>
+				<?php if( ! $this->opt( $this->id . '_hide_nav' ) ): ?>
+				<div class="flipper-heading">
+					<div class="flipper-heading-wrap">
+						<div class="flipper-title pl-standard-title">
+							<?php
+								echo $title;
 
+
+								$archive_link = get_post_type_archive_link( $post_type );
+
+								if( $archive_link && !$hide_link ){
+									printf( '<a href="%s" > %s</a>',
+										$archive_link,
+										__(' / View All', 'pagelines')
+									);
+								} else if ($post_type == 'post' && get_option( 'page_for_posts') && !is_home()){
+									printf( '<a href="%s" > %s</a>',
+										get_page_uri( get_option( 'page_for_posts') ),
+										__(' / View Blog', 'pagelines')
+									);
+								}
+
+								?>
+
+						</div>
+						<a class="flipper-prev pl-contrast" href="#"><i class="icon-angle-left"></i></a>
+				    	<a class="flipper-next pl-contrast" href="#"><i class="icon-angle-right"></i></a>
+					</div>
+				</div>
+				<?php endif; ?>
+				
 				<div class="flipper-wrap">
 
-				<ul class="row flipper-items text-align-center flipper" data-scroll-speed="800" data-easing="easeInOutQuart" data-shown="<?php echo $shown;?>">
+				<ul class="row flipper-items text-align-center layout-<?php echo $format;?> flipper" data-scroll-speed="800" data-easing="easeInOutQuart" data-shown="<?php echo $shown;?>">
 		<?php } ?>
 
 			<?php
@@ -275,16 +290,23 @@ class PageLinesFlipper extends PageLinesSection {
 					<div class="flipper-info-bg"></div>
 					<a class="flipper-info pl-center-inside" href="<?php echo get_permalink();?>">
 
-						<div class="pl-center">
-							<div class="info-text"><i class="icon-link"></i></div>
-
-
-
-						</div>
-
+						<div class="pl-center-table"><div class="pl-center-cell">
+							
+							<?php if( $format == 'masonry' ): ?>
+								<h4>
+									<?php the_title(); ?>
+								</h4>
+								<div class="metabar">
+									<?php  echo do_shortcode( '[post_date]' ); ?>
+								</div>
+							<?php else: ?>
+								<div class="info-text"><i class="icon-link"></i></div>
+							<?php endif;?>
+						</div></div>
+						
 					</a>
 				</div><!--work-item-->
-
+				<?php if( $format == 'grid' ): ?>
 				<div class="flipper-meta">
 					<?php if( ! $disable_show_love ) echo pl_love( $post->ID );?>
 					<h4 class="flipper-post-title"><a href="<?php echo get_permalink();?>"><?php the_title(); ?></a></h4>
@@ -296,7 +318,7 @@ class PageLinesFlipper extends PageLinesSection {
 					<?php endif;?>
 					
 				</div>
-
+				<?php endif; ?>
 
 				<div class="clear"></div>
 

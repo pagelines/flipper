@@ -1,7 +1,7 @@
 .flipper-heading {
 	z-index: 100;
 	position: relative;
-	margin-bottom: 7px;
+	margin: 7px 0;
 	min-height: 23px;
 	line-height: 20px;
 	.flipper-title{
@@ -39,10 +39,25 @@
 	
 }
 
-.section-flipper .pl-section-pad{
-	overflow: hidden;
-	position: relative;
+
+.pl-area.section-flipper {
+	.flipper-heading-wrap{
+		margin: 0 10px;
+		position: relative;
+	}
+	
+	.flipper-items .flipper-meta {
+		padding: 15px;
+	}
 }
+.section-flipper {
+	.pl-section-pad{
+		padding: 15px 0;
+		overflow: hidden;
+		position: relative;
+	}
+}
+
 .flipper-wrap {
 	position: relative;
 	margin-left: -10px;
@@ -62,7 +77,7 @@
 			position: relative;
 			display: block;
 			float: left;
-			margin: 0px 10px 0px 10px;
+			
 			h3 {
 				position: relative;
 				top: 0px;
@@ -76,6 +91,14 @@
 				margin-bottom: 0px;
 				
 			}
+		}
+		&.layout-grid {
+			li{
+				margin: 0px 10px 0px 10px;
+			}	
+		}
+		&.layout-masonry li{
+			margin: 0px;
 		}
 		.flipper-item{
 			position: relative;
@@ -164,7 +187,7 @@
 		}
 
 		.flipper-meta {
-			padding-top: 10px;
+			padding: 10px 0;
 			text-align: left;
 			.pl-love{
 				float: right; 
