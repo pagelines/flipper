@@ -116,7 +116,7 @@ class PageLinesFlipper extends PageLinesSection {
 				array(
 					'key'			=> 'disable_flipper_show_love',
 					'type' 			=> 'check',
-					'label' 	=> __( 'Disable love button/count?', 'pagelines' ),
+					'label' 	=> __( 'Disable social button/count?', 'pagelines' ),
 
 				),
 				
@@ -308,7 +308,7 @@ class PageLinesFlipper extends PageLinesSection {
 				</div><!--work-item-->
 				<?php if( $format == 'grid' ): ?>
 				<div class="flipper-meta">
-					<?php if( ! $disable_show_love ) echo pl_love( $post->ID );?>
+					<?php if( ! $disable_show_love ) echo pl_karma( $post->ID );?>
 					<h4 class="flipper-post-title"><a href="<?php echo get_permalink();?>"><?php the_title(); ?></a></h4>
 					<div class="flipper-metabar"><?php echo do_shortcode( apply_filters('pl_flipper_meta', $meta, $post->ID, pl_type_slug() )); ?></div>
 					<?php if( $show_excerpt ): ?>
