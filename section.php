@@ -258,8 +258,8 @@ class PageLinesFlipper extends PageLinesSection {
 								?>
 
 						</div>
-						<a class="flipper-prev pl-contrast" href="#"><i class="icon-angle-left"></i></a>
-				    	<a class="flipper-next pl-contrast" href="#"><i class="icon-angle-right"></i></a>
+						<a class="flipper-prev pl-contrast" href="#"><i class="icon icon-angle-left"></i></a>
+				    	<a class="flipper-next pl-contrast" href="#"><i class="icon icon-angle-right"></i></a>
 					</div>
 				</div>
 				<?php endif; ?>
@@ -300,7 +300,7 @@ class PageLinesFlipper extends PageLinesSection {
 									<?php  echo do_shortcode( '[post_date]' ); ?>
 								</div>
 							<?php else: ?>
-								<div class="info-text"><i class="icon-link"></i></div>
+								<div class="info-text"><i class="icon icon-link"></i></div>
 							<?php endif;?>
 						</div></div>
 						
