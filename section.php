@@ -194,7 +194,7 @@ class PageLinesFlipper extends PageLinesSection {
 
 		$title = ($this->opt('flipper_title')) ? $this->opt('flipper_title') : $pt->label;
 
-		$hide_link = ($this->opt('flipper_hide_title_link')) ? $this->opt('flipper_hide_title_link') : false;
+		$hide_link = ( $this->opt('flipper_hide_title_link') ) ? true : false;
 
 		$show_excerpt = ($this->opt('flipper_show_excerpt')) ? $this->opt('flipper_show_excerpt') : false;
 		$disable_show_love = ($this->opt('disable_flipper_show_love')) ? true : false;
@@ -243,17 +243,20 @@ class PageLinesFlipper extends PageLinesSection {
 
 								$archive_link = get_post_type_archive_link( $post_type );
 
-								if( $archive_link && !$hide_link ){
+								if( $archive_link && ! $hide_link ){
+								
 									printf( '<a href="%s" > %s</a>',
 										$archive_link,
 										__(' / View All', 'pagelines')
 									);
-								} else if ($post_type == 'post' && get_option( 'page_for_posts') && !is_home()){
+								} else if ( $post_type == 'post' && get_option( 'page_for_posts') && !is_home() && ! $hide_link ){
+
 									printf( '<a href="%s" > %s</a>',
 										get_page_uri( get_option( 'page_for_posts') ),
 										__(' / View Blog', 'pagelines')
 									);
 								}
+							
 
 								?>
 
