@@ -19,6 +19,7 @@ class PageLinesFlipper extends PageLinesSection {
 
 	function section_styles(){
 		wp_enqueue_script( 'caroufredsel', $this->base_url.'/caroufredsel.min.js', array( 'jquery' ), pl_get_cache_key(), true );
+		wp_enqueue_script( 'touchswipe', $this->base_url.'/touchswipe.js', array( 'jquery' ), pl_get_cache_key(), true );
 		wp_enqueue_script( 'flipper', $this->base_url.'/flipper.js', array( 'jquery' ), pl_get_cache_key(), true );
 	}
 
