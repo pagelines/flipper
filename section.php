@@ -25,7 +25,7 @@ class PageLinesFlipper extends PageLinesSection {
 
 	function section_opts(){
 
-		
+
 		$options = array();
 
 		$options[] = array(
@@ -49,7 +49,7 @@ class PageLinesFlipper extends PageLinesSection {
 					'opts'			=> array(
 						'grid'		=> array('name' => __( 'Grid', 'pagelines' ) ),
 						'masonry'	=> array('name' => __( 'Image Only', 'pagelines' ) )
-					)	
+					)
 				),
 				array(
 					'key'			=> 'flipper_shown',
@@ -78,7 +78,7 @@ class PageLinesFlipper extends PageLinesSection {
 					'type'		=> 'check',
 					'label'		=> __( 'Hide Nav?', 'pagelines' )
 				),
-				
+
 
 			)
 
@@ -120,14 +120,14 @@ class PageLinesFlipper extends PageLinesSection {
 					'label' 	=> __( 'Disable social button/count?', 'pagelines' ),
 
 				),
-				
+
 
 
 			)
 
 		);
 
-	
+
 		$options[] = array(
 			'key'		=> 'flipper_post_sort',
 			'type'		=> 'select',
@@ -138,8 +138,8 @@ class PageLinesFlipper extends PageLinesSection {
 				'ASC'		=> array('name' => __( 'Date Ascending', 'pagelines' ) ),
 				'rand'		=> array('name'	=> __( 'Random', 'pagelines' ) )
 			)
-		);	
-		
+		);
+
 		$selection_opts = array(
 			array(
 				'key'			=> 'flipper_meta_key',
@@ -155,25 +155,25 @@ class PageLinesFlipper extends PageLinesSection {
 				'label' 	=> __( 'Meta Key Value', 'pagelines' ),
 			),
 		);
-		
+
 		if($this->opt('flipper_post_type') == 'post'){
 			$selection_opts[] = array(
 				'label'			=> 'Post Category',
-				'key'			=> 'flipper_category', 
-				'type'			=> 'select_taxonomy', 
-				'post_type'		=> 'post', 
+				'key'			=> 'flipper_category',
+				'type'			=> 'select_taxonomy',
+				'post_type'		=> 'post',
 				'help'		=> __( 'Only applies for standard blog posts.', 'pagelines' ),
-			); 
+			);
 		}
-		
-		
-		
+
+
+
 
 		$options[] = array(
 			'col'	=> 1,
 			'title' => __( 'Advanced Post Selection', 'pagelines' ),
 			'type'	=> 'multi',
-			
+
 			'opts'	=> $selection_opts
 		);
 
@@ -181,7 +181,7 @@ class PageLinesFlipper extends PageLinesSection {
 
 		return $options;
 	}
-	
+
 	function section_template(  ) {
 
 		global $post;
@@ -199,18 +199,18 @@ class PageLinesFlipper extends PageLinesSection {
 
 		$show_excerpt = ($this->opt('flipper_show_excerpt')) ? $this->opt('flipper_show_excerpt') : false;
 		$disable_show_love = ($this->opt('disable_flipper_show_love')) ? true : false;
-		
+
 
 		$format = ( $this->opt($this->id.'_format') ) ? $this->opt($this->id.'_format') : 'grid';
 
-		$meta = ($this->opt('flipper_meta')) ? $this->opt('flipper_meta') : '[post_date] [post_edit]';
+		$meta = $this->opt('flipper_meta', array( 'default' => '[post_date] [post_edit]', 'shortcode' => false ) );
 
 		$sizes = ($this->opt('flipper_sizes')) ? $this->opt('flipper_sizes') : 'aspect-thumb';
-	
+
 
 		$sorting = ($this->opt('flipper_post_sort')) ? $this->opt('flipper_post_sort') : 'DESC';
 
-		$orderby = ( 'rand' == $this->opt('flipper_post_sort') ) ? 'rand' : 'date'; 
+		$orderby = ( 'rand' == $this->opt('flipper_post_sort') ) ? 'rand' : 'date';
 
 		$the_query = array(
 			'posts_per_page' 	=> $total,
@@ -223,17 +223,18 @@ class PageLinesFlipper extends PageLinesSection {
 			$the_query['meta_key'] = $this->opt('flipper_meta_key');
 			$the_query['meta_value'] = $this->opt('flipper_meta_value');
 		}
-		
+
 		if( $this->opt('flipper_category') && $this->opt('flipper_category') != '' ){
-			$cat = get_category_by_slug( $this->opt('flipper_category') ); 
+			$cat = get_category_by_slug( $this->opt('flipper_category') );
 			$the_query['category'] = $cat->term_id;
 		}
 
 		$posts = get_posts( $the_query );
-		
 
-		if(!empty($posts)) { setup_postdata( $post ); ?>
-				
+
+		if( !empty($posts) ) {
+		//	setup_postdata( $post ); ?>
+
 				<?php if( ! $this->opt( $this->id . '_hide_nav' ) ): ?>
 				<div class="flipper-heading">
 					<div class="flipper-heading-wrap">
@@ -245,7 +246,7 @@ class PageLinesFlipper extends PageLinesSection {
 								$archive_link = get_post_type_archive_link( $post_type );
 
 								if( $archive_link && ! $hide_link ){
-								
+
 									printf( '<a href="%s" > %s</a>',
 										$archive_link,
 										__(' / View All', 'pagelines')
@@ -257,7 +258,7 @@ class PageLinesFlipper extends PageLinesSection {
 										__(' / View Blog', 'pagelines')
 									);
 								}
-							
+
 
 								?>
 
@@ -267,7 +268,7 @@ class PageLinesFlipper extends PageLinesSection {
 					</div>
 				</div>
 				<?php endif; ?>
-				
+
 				<div class="flipper-wrap">
 
 				<ul class="row flipper-items text-align-center layout-<?php echo $format;?> flipper" data-scroll-speed="800" data-easing="easeInOutQuart" data-shown="<?php echo $shown;?>">
@@ -276,7 +277,12 @@ class PageLinesFlipper extends PageLinesSection {
 			<?php
 
 			if(!empty($posts)):
-				 foreach( $posts as $post ): setup_postdata( $post ); ?>
+				 foreach( $posts as $post ):
+					global $post;
+					setup_postdata( $post );
+
+
+					?>
 
 
 			<li style="">
@@ -287,7 +293,7 @@ class PageLinesFlipper extends PageLinesSection {
 						echo get_the_post_thumbnail( $post->ID, $sizes, array('title' => ''));
 					} else {
 						printf('<img height="400" width="600" src="%s" alt="no image added yet." />', pl_default_image());
-					
+
 						}
 						 ?>
 
@@ -295,7 +301,7 @@ class PageLinesFlipper extends PageLinesSection {
 					<a class="flipper-info pl-center-inside" href="<?php echo get_permalink();?>">
 
 						<div class="pl-center-table"><div class="pl-center-cell">
-							
+
 							<?php if( $format == 'masonry' ): ?>
 								<h4>
 									<?php the_title(); ?>
@@ -307,7 +313,7 @@ class PageLinesFlipper extends PageLinesSection {
 								<div class="info-text"><i class="icon icon-link"></i></div>
 							<?php endif;?>
 						</div></div>
-						
+
 					</a>
 				</div><!--work-item-->
 				<?php if( $format == 'grid' ): ?>
@@ -320,7 +326,7 @@ class PageLinesFlipper extends PageLinesSection {
 						<?php the_excerpt();?>
 					</div>
 					<?php endif;?>
-					
+
 				</div>
 				<?php endif; ?>
 
