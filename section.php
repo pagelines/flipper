@@ -217,6 +217,7 @@ class PageLinesFlipper extends PageLinesSection {
 			'post_type' 		=> $post_type,
 			'orderby'          => $orderby,
 			'order'            => $sorting,
+			'suppress_filters' => '0'
 		);
 
 		if( $this->opt('flipper_meta_key') && $this->opt('flipper_meta_key') != '' && $this->opt('flipper_meta_value') ){
